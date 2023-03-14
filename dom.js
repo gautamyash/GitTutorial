@@ -20,3 +20,16 @@ for (var i = 0; i < items.length; i++) {
   items[i].style.fontWeight = 'bold';
   
 }
+// Using getElementsByClassName
+var list = document.getElementsByClassName('list-group')[0];
+var newItem = document.createElement('li');
+newItem.textContent = 'New Item';
+newItem.className = 'list-group-item-new';
+list.appendChild(newItem);
+
+// Using getElementsByTagName
+var list = document.getElementsByTagName('ul')[0];
+var newItem = document.createElement('li');
+newItem.textContent = 'New Item';
+newItem.className = 'list-group-item-new';
+list.appendChild(newItem);
