@@ -152,9 +152,45 @@ itemList.addEventListener('click', removeItem);
 // Filter event
 filter.addEventListener
 
-function addItem(e){
+// function addItem(e){
+//   e.preventDefault();
+//   var newItem = document.getElementById('item').value;
+//   var li = document.createElement('li');
+//   li.className = 'list-group-item';
+//   li.appendChild(document.createTextNode(newItem));
+//   var deleteBtn = document.createElement('button');
+//   deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
+//   deleteBtn.appendChild(document.createTextNode('X'));
+//   li.appendChild(deleteBtn);
+//   // Create edit button element
+//   var editBtn = document.createElement('button');
+//   editBtn.className = 'btn btn-secondary btn-sm float-right edit mr-2';
+//   editBtn.appendChild(document.createTextNode('Edit'));
+//   li.appendChild(editBtn);
+//   itemList.appendChild(li);
+
+//   // Store user details in local storage
+//   var userDetails = {
+//     name: newItem
+//   };
+//   var userDetailsStr = JSON.stringify(userDetails);
+//   localStorage.setItem('userDetails', userDetailsStr);
+// }
+function addItem(e) {
   e.preventDefault();
+
+  // Get input value
   var newItem = document.getElementById('item').value;
+
+  // Create new item object
+  var item = {
+    name: newItem,
+    date: new Date().toDateString()
+  };
+
+  // Convert item object to JSON string
+  var itemJson = JSON.stringify(item);
+  localStorage.setItem('item', itemJson);
   var li = document.createElement('li');
   li.className = 'list-group-item';
   li.appendChild(document.createTextNode(newItem));
@@ -162,17 +198,5 @@ function addItem(e){
   deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
   deleteBtn.appendChild(document.createTextNode('X'));
   li.appendChild(deleteBtn);
-  // Create edit button element
-  var editBtn = document.createElement('button');
-  editBtn.className = 'btn btn-secondary btn-sm float-right edit mr-2';
-  editBtn.appendChild(document.createTextNode('Edit'));
-  li.appendChild(editBtn);
   itemList.appendChild(li);
-
-  // Store user details in local storage
-  var userDetails = {
-    name: newItem
-  };
-  var userDetailsStr = JSON.stringify(userDetails);
-  localStorage.setItem('userDetails', userDetailsStr);
 }
