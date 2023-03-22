@@ -200,3 +200,17 @@ function addItem(e) {
   li.appendChild(deleteBtn);
   itemList.appendChild(li);
 }
+
+const users = JSON.parse(localStorage.getItem('users')) || [];
+function addUser(newUser) {
+
+  users.push(newUser);
+  localStorage.setItem('users', JSON.stringify(users));
+}
+
+const newUser = {
+  name: 'John Doe',
+  email: 'johndoe@example.com',
+  age: 30
+};
+addUser(newUser);
