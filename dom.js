@@ -176,41 +176,58 @@ filter.addEventListener
 //   var userDetailsStr = JSON.stringify(userDetails);
 //   localStorage.setItem('userDetails', userDetailsStr);
 // }
-function addItem(e) {
-  e.preventDefault();
+// function addItem(e) {
+//   e.preventDefault();
 
-  // Get input value
-  var newItem = document.getElementById('item').value;
+//   // Get input value
+//   var newItem = document.getElementById('item').value;
 
-  // Create new item object
-  var item = {
-    name: newItem,
-    date: new Date().toDateString()
-  };
+//   // Create new item object
+//   var item = {
+//     name: newItem,
+//     date: new Date().toDateString()
+//   };
 
-  // Convert item object to JSON string
-  var itemJson = JSON.stringify(item);
-  localStorage.setItem('item', itemJson);
-  var li = document.createElement('li');
-  li.className = 'list-group-item';
-  li.appendChild(document.createTextNode(newItem));
-  var deleteBtn = document.createElement('button');
-  deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
-  deleteBtn.appendChild(document.createTextNode('X'));
-  li.appendChild(deleteBtn);
-  itemList.appendChild(li);
-}
+//   // Convert item object to JSON string
+//   var itemJson = JSON.stringify(item);
+//   localStorage.setItem('item', itemJson);
+//   var li = document.createElement('li');
+//   li.className = 'list-group-item';
+//   li.appendChild(document.createTextNode(newItem));
+//   var deleteBtn = document.createElement('button');
+//   deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
+//   deleteBtn.appendChild(document.createTextNode('X'));
+//   li.appendChild(deleteBtn);
+//   itemList.appendChild(li);
+// }
 
-const users = JSON.parse(localStorage.getItem('users')) || [];
-function addUser(newUser) {
+// const users = JSON.parse(localStorage.getItem('users')) || [];
+// function addUser(newUser) {
 
-  users.push(newUser);
-  localStorage.setItem('users', JSON.stringify(users));
-}
+//   users.push(newUser);
+//   localStorage.setItem('users', JSON.stringify(users));
+// }
 
-const newUser = {
-  name: 'John Doe',
-  email: 'johndoe@example.com',
-  age: 30
-};
-addUser(newUser);
+// const newUser = {
+//   name: 'John Doe',
+//   email: 'johndoe@example.com',
+//   age: 30
+// };
+// addUser(newUser);
+// Get the delete button and contact list elements
+const deleteBtn = document.getElementById('delete-btn');
+const contactList = document.getElementById('contact-list');
+deleteBtn.addEventListener('click', () => {
+  const selectedContact = document.querySelector('.selected');
+  if (selectedContact) {
+    contactList.removeChild(selectedContact);
+    const index = contacts.indexOf(selectedContact.dataset.id);
+    contacts.splice(index, 1);
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }
+});
+contactList.addEventListener('click', (event) => {
+  const contactItems = document.querySelectorAll('.contact-item'); 
+  contactItems.forEach((item) => item.classList.remove('selected'));
+  event.target.classList.add('selected');
+});
