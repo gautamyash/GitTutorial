@@ -12,59 +12,65 @@
       <label for="email">Email:</label>
       <input type="email" id="email" name="email" required><br><br>
 
-      <input type="submit" value="Submit">
+      <button type="submit">Submit</button>
     </form>
-    
-    <h2>Booking List</h2>
-    <ul id="bookingData"></ul>
-    
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script>
-      document.getElementById('bookingForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        var name = document.getElementById('name').value;
-        var email = document.getElementById('email').value;
 
-        var bookingData = {
-          name: name,
-          email: email,
-        };
-        
-        
-        axios.post('https://crudcrud.com/api/be3606fc9cb644f69fdac9df5d85cc3b/bookings', bookingData)
-          .then(function(response) {
-            alert('Booking data saved successfully!');
-            document.getElementById('name').value = '';
-            document.getElementById('email').value = '';
-            showBookingData();
-          })
-          .catch(function(error) {
-            
-            alert('An error occurred while saving booking data.');
-            console.error(error);
+    <h2>Bookings:</h2>
+    <ul id="bookings"></ul>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      const form = document.getElementById('bookingForm');
+      const bookingsList = document.getElementById('bookings');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+
+        const res = await axios.post('https://crudcrud.com/api/be3606fc9cb644f69fdac9df5d85cc3b', { name, email });
+        const booking = res.data;
+
+        const li = document.createElement('li');
+        li.innerHTML = `
+          ${booking.name} (${booking.email})
+          <button class="deleteButton" data-id="${booking._id}">Delete</button>
+        `;
+        bookingsList.appendChild(li);
+
+        const deleteButtons = document.getElementsByClassName('deleteButton');
+        for (let i = 0; i < deleteButtons.length; i++) {
+          deleteButtons[i].addEventListener('click', async (e) => {
+            const bookingId = e.target.getAttribute('data-id');
+            await axios.delete(`https://crudcrud.com/api/be3606fc9cb644f69fdac9df5d85cc3b/${bookingId}`);
+            li.remove();
           });
+        }
+
+        form.reset();
       });
-      
-        function showBookingData() {
-          axios.get('https://crudcrud.com/api/be3606fc9cb644f69fdac9df5d85cc3b/bookings')
-          .then(function(response) {
-            var bookingsArray = response.data;
-            var bookingList = document.getElementById('bookingData');
-            bookingList.innerHTML = '';
-              for (var i = 0; i < bookingsArray.length; i++) {
-              var booking = bookingsArray[i];
-              var bookingListItem = document.createElement('li');
-              bookingListItem.innerHTML = 'Name: ' + booking.name + ', Email: ' + booking.email;
-              bookingList.appendChild(bookingListItem);
-            }
-          })
-          .catch(function(error) {
-            alert('An error occurred while retrieving booking data.');
-            console.error(error);
+
+      window.addEventListener('DOMContentLoaded', async () => {
+        const res = await axios.get('https://crudcrud.com/api/be3606fc9cb644f69fdac9df5d85cc3b/bookings');
+        const bookings = res.data;
+        for (let booking of bookings) {
+          const li = document.createElement('li');
+          li.innerHTML = `
+            ${booking.name} (${booking.email})
+            <button class="deleteButton" data-id="${booking._id}">Delete</button>
+          `;
+          bookingsList.appendChild(li);
+        }
+
+        const deleteButtons = document.getElementsByClassName('deleteButton');
+        for (let i = 0; i < deleteButtons.length; i++) {
+          deleteButtons[i].addEventListener('click', async (e) => {
+            const bookingId = e.target.getAttribute('data-id');
+            await axios.delete(`https://crudcrud.com/api/be3606fc9cb644f69fdac9df5d85cc3b/bookings/${bookingId}`);
+            e.target.parentElement.remove();
           });
-      }
-      document.addEventListener('DOMContentLoaded', function() {
-        showBookingData();
+        }
       });
     </script>
   </body>
