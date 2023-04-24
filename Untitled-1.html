@@ -13,6 +13,8 @@
       <input type="email" id="email" name="email" required><br><br>
 
       <button type="submit">Submit</button>
+      <button type="button" id="cancelEdit" style="display:none;">Cancel</button>
+      <input type="hidden" id="editBookingId" value="">
     </form>
 
     <h2>Bookings:</h2>
@@ -22,33 +24,40 @@
     <script>
       const form = document.getElementById('bookingForm');
       const bookingsList = document.getElementById('bookings');
+      const cancelEditButton = document.getElementById('cancelEdit');
+      const editBookingIdInput = document.getElementById('editBookingId');
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const name = document.getElementById('name').value;
         const email = document.getElementById('email').value;
+        const editBookingId = editBookingIdInput.value;
 
-        const res = await axios.post('https://crudcrud.com/api/be3606fc9cb644f69fdac9df5d85cc3b', { name, email });
-        const booking = res.data;
-
-        const li = document.createElement('li');
-        li.innerHTML = `
-          ${booking.name} (${booking.email})
-          <button class="deleteButton" data-id="${booking._id}">Delete</button>
-        `;
-        bookingsList.appendChild(li);
-
-        const deleteButtons = document.getElementsByClassName('deleteButton');
-        for (let i = 0; i < deleteButtons.length; i++) {
-          deleteButtons[i].addEventListener('click', async (e) => {
-            const bookingId = e.target.getAttribute('data-id');
-            await axios.delete(`https://crudcrud.com/api/be3606fc9cb644f69fdac9df5d85cc3b/${bookingId}`);
-            li.remove();
-          });
+        if (editBookingId) {
+          // Update existing booking
+          await axios.put(`https://crudcrud.com/api/be3606fc9cb644f69fdac9df5d85cc3b/bookings/${editBookingId}`, { name, email });
+          const editedBooking = document.getElementById(`booking-${editBookingId}`);
+          editedBooking.innerHTML = `${name} (${email}) <button class="editButton" data-id="${editBookingId}">Edit</button> <button class="deleteButton" data-id="${editBookingId}">Delete</button>`;
+        } else {
+          // Create new booking
+          const res = await axios.post('https://crudcrud.com/api/be3606fc9cb644f69fdac9df5d85cc3b/bookings', { name, email });
+          const booking = res.data;
+          const li = document.createElement('li');
+          li.setAttribute('id', `booking-${booking._id}`);
+          li.innerHTML = `${name} (${email}) <button class="editButton" data-id="${booking._id}">Edit</button> <button class="deleteButton" data-id="${booking._id}">Delete</button>`;
+          bookingsList.appendChild(li);
         }
 
+        editBookingIdInput.value = '';
         form.reset();
+        cancelEditButton.style.display = 'none';
+      });
+
+      cancelEditButton.addEventListener('click', () => {
+        editBookingIdInput.value = '';
+        form.reset();
+        cancelEditButton.style.display = 'none';
       });
 
       window.addEventListener('DOMContentLoaded', async () => {
