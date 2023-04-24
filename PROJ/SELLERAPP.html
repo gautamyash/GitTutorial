@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sellers Admin Page</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header>
+      <h1>Sellers Admin Page</h1>
+    </header>
+
+    <main>
+      <section>
+        <h2>Add a new seller:</h2>
+        <form id="addSellerForm">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required><br><br>
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required><br><br>
+
+          <button type="submit">Submit</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>All Sellers:</h2>
+        <ul id="sellersList"></ul>
+      </section>
+
+      <section>
+        <h2>Search Sellers:</h2>
+        <form id="searchForm">
+          <label for="searchTerm">Search Term:</label>
+          <input type="text" id="searchTerm" name="searchTerm" required><br><br>
+
+          <button type="submit">Search</button>
+        </form>
+        <ul id="searchResults"></ul>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
